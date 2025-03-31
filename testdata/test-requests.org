@@ -1,0 +1,19 @@
+#+title: Test Requests
+
+#+begin_src sh no-session
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"guess-number": 1, "word": "plays", "colors": ["gray", "green", "green", "green", "green"]}' \
+    http://localhost:8080/guess
+#+end_src
+
+#+begin_src sh with-session
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"guess-number": 1, "word": "plays", "colors": ["gray", "green", "green", "green", "green"]}' \
+    -c cookies.txt \
+    http://localhost:8080/guess
+
+curl -X POST -H "Content-Type: application/json" \
+    -d '{"guess-number": 2, "word": "slays", "colors": ["green", "green", "green", "green", "green"]}' \
+    -b cookies.txt \
+    http://localhost:8080/guess
+#+end_src
