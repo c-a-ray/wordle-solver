@@ -2,28 +2,26 @@ import React from "react";
 
 const Instructions = () => {
   return (
-    <div className="text-center mb-8 text-gray-600 dark:text-gray-300 w-full flex flex-col items-center">
-      <p className="mb-3 text-center w-full">
-        Enter your guess and use ↑/↓ arrows to change cell colors.
-      </p>
-      <div className="text-center w-full flex justify-center flex-wrap">
-        <div className="mx-1">
-          <span className="inline-block px-2 py-1 mr-1 bg-green-500 text-white text-xs rounded">
+    <div className="text-gray-300 text-center max-w-lg mx-auto">
+      <h3 className="text-blue-400 text-lg font-bold mb-3 text-center">Color Guide</h3>
+      <div className="flex justify-center gap-4">
+        <div className="text-center">
+          <span className="inline-block px-2 py-1 bg-green-600 text-white text-xs rounded-md mb-1">
             Green
-          </span>{" "}
-          = correct position
+          </span>
+          <p className="text-sm">correct position</p>
         </div>
-        <div className="mx-1">
-          <span className="inline-block px-2 py-1 mr-1 bg-yellow-500 text-white text-xs rounded">
+        <div className="text-center">
+          <span className="inline-block px-2 py-1 bg-yellow-500 text-white text-xs rounded-md mb-1">
             Yellow
-          </span>{" "}
-          = wrong position
+          </span>
+          <p className="text-sm">wrong position</p>
         </div>
-        <div className="mx-1">
-          <span className="inline-block px-2 py-1 mr-1 bg-gray-500 text-white text-xs rounded">
+        <div className="text-center">
+          <span className="inline-block px-2 py-1 bg-gray-600 text-white text-xs rounded-md mb-1">
             Gray
-          </span>{" "}
-          = not in word
+          </span>
+          <p className="text-sm">not in word</p>
         </div>
       </div>
     </div>
