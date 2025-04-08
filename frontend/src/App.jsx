@@ -257,12 +257,12 @@ function App() {
   return (
     <div
       className="min-h-screen bg-black text-white"
-      style={{ display: "grid", gridTemplateColumns: "320px 1fr" }}
+      style={{ display: "grid", gridTemplateColumns: "250px 1fr" }}
     >
       <Sidebar suggestions={suggestions} />
 
-      <div className="flex flex-col items-center p-8 flex-grow">
-        <h1 className="text-4xl font-bold mb-6 text-center">Wordle Solver</h1>
+      <div className="flex flex-col items-center p-4 pl-8">
+        <h1 className="text-3xl font-bold mb-6 text-center">Wordle Solver</h1>
         {errorMessage && (
           <div className="bg-red-900 border border-red-700 text-white px-4 py-3 rounded-xl mb-6 text-center max-w-md animate-pulse">
             {errorMessage}
@@ -284,7 +284,7 @@ function App() {
           }}
         />
         {/* Centered Grid */}
-        <div className="mb-8 mt-4">
+        <div className="mb-6 mt-2">
           <div
             style={{
               display: "flex",
@@ -317,11 +317,11 @@ function App() {
             ))}
           </div>
         </div>
-        <div className="mb-8 max-w-md text-center">
-          <p className="text-gray-300 mb-2">
+        <div className="mb-6 max-w-md text-center">
+          <p className="text-gray-400 mb-2">
             Click a cell and type to enter a word. Use ↑/↓ to change colors.
           </p>
-          <p className="text-gray-300">
+          <p className="text-gray-400">
             Press Enter when your word is complete to get suggestions.
           </p>
         </div>

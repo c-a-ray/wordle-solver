@@ -4,21 +4,59 @@ const Sidebar = ({ suggestions }) => {
   return (
     <div
       style={{
-        width: "320px",
+        width: "250px",
         height: "100vh",
-        backgroundColor: "#0f172a",
-        borderRight: "1px solid #334155",
+        backgroundColor: "#15202b",
+        borderRight: "1px solid #38444d",
+        overflowY: "auto",
       }}
-      className="overflow-y-auto"
     >
-      <div className="p-6 border-b border-gray-800 text-2xl font-bold uppercase tracking-wide text-white">
+      <div
+        style={{
+          padding: "16px",
+          borderBottom: "1px solid #38444d",
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "bold",
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          color: "white",
+        }}
+      >
         Suggestions
       </div>
-      <div className="p-4 space-y-4">
+      <div
+        style={{
+          padding: "12px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+        }}
+      >
         {suggestions.map((word, index) => (
           <div
             key={index}
-            className="bg-gray-800 hover:bg-gray-700 text-lg font-semibold uppercase text-center px-4 py-3 rounded-xl shadow-md transition duration-200 transform hover:scale-105 text-white"
+            style={{
+              backgroundColor: "#192734",
+              color: "white",
+              padding: "8px 12px",
+              borderRadius: "8px",
+              fontSize: "18px",
+              fontWeight: "600",
+              textAlign: "center",
+              textTransform: "uppercase",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+              cursor: "pointer",
+              transition: "all 0.2s",
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = "#22303c";
+              e.currentTarget.style.transform = "scale(1.05)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = "#192734";
+              e.currentTarget.style.transform = "scale(1)";
+            }}
           >
             {word}
           </div>
@@ -27,4 +65,5 @@ const Sidebar = ({ suggestions }) => {
     </div>
   );
 };
+
 export default Sidebar;
