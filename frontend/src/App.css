@@ -1,0 +1,84 @@
+.app-container {
+    min-height: 100vh;
+    background-color: black;
+    color: white;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    padding-left: 2rem;
+}
+
+.app-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.error-message {
+    background-color: #7f1d1d;
+    border: 1px solid #b91c1c;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 28rem;
+    animation: pulse 2s infinite;
+}
+
+.hidden-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+}
+
+.grid-container {
+    margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.grid-row {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.instructions-container {
+    margin-bottom: 1.5rem;
+    max-width: 28rem;
+    text-align: center;
+}
+
+.instruction-text {
+    color: #9ca3af;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}

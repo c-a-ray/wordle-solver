@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
+import "./App.css";
 
 const COLORS = {
   EMPTY: "empty",
@@ -255,19 +256,12 @@ function App() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-black text-white"
-      style={{ display: "grid", gridTemplateColumns: "250px 1fr" }}
-    >
+    <div className="app-container">
       <Sidebar suggestions={suggestions} />
 
-      <div className="flex flex-col items-center p-4 pl-8">
-        <h1 className="text-3xl font-bold mb-6 text-center">Wordle Solver</h1>
-        {errorMessage && (
-          <div className="bg-red-900 border border-red-700 text-white px-4 py-3 rounded-xl mb-6 text-center max-w-md animate-pulse">
-            {errorMessage}
-          </div>
-        )}
+      <div className="main-content">
+        <h1 className="app-title">Wordle Solver</h1>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
         {/* Hidden input for keyboard capture */}
         <input
           ref={hiddenInputRef}
@@ -275,29 +269,13 @@ function App() {
           autoFocus
           autoComplete="off"
           onKeyDown={handleKeyDown}
-          style={{
-            position: "absolute",
-            opacity: 0,
-            pointerEvents: "none",
-            height: 0,
-            width: 0,
-          }}
+          className="hidden-input"
         />
         {/* Centered Grid */}
-        <div className="mb-6 mt-2">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              alignItems: "center",
-            }}
-          >
+        <div className="grid-container">
+          <div className="grid">
             {grid.map((row, rowIndex) => (
-              <div
-                key={`row-${rowIndex}`}
-                style={{ display: "flex", flexDirection: "row", gap: "0.5rem" }}
-              >
+              <div key={`row-${rowIndex}`} className="grid-row">
                 {row.map((cell, colIndex) => {
                   const isActive =
                     rowIndex === currentRow && colIndex === currentCol;
@@ -317,11 +295,11 @@ function App() {
             ))}
           </div>
         </div>
-        <div className="mb-6 max-w-md text-center">
-          <p className="text-gray-400 mb-2">
+        <div className="instructions-container">
+          <p className="instruction-text mb-2">
             Click a cell and type to enter a word. Use ↑/↓ to change colors.
           </p>
-          <p className="text-gray-400">
+          <p className="instruction-text">
             Press Enter when your word is complete to get suggestions.
           </p>
         </div>
