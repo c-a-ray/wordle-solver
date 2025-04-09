@@ -13,7 +13,7 @@ This project is a full-stack application with:
 
 - [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/)
 - [Quicklisp](https://www.quicklisp.org/beta/)
-- [Node.js](https://nodejs.org/) (v16+)
+- [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
 
 ## Getting Started
