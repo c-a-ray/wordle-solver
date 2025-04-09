@@ -3,7 +3,6 @@ import { COLORS, ERROR_TIMEOUT } from "../utils/constants";
 import { getNextColorUp, getNextColorDown } from "../utils/colorUtils";
 import {
   submitGuess,
-  getSuggestions,
   resetGame,
   convertColorsForBackend,
   DEFAULT_SUGGESTIONS,
@@ -43,44 +42,8 @@ const useWordleGame = () => {
 
   // Initialize the game
   useEffect(() => {
-    const initGame = async () => {
-      // Start with a default set of suggestions
-      setSuggestions(DEFAULT_SUGGESTIONS);
-
-      try {
-        setIsLoading(true);
-
-        // Try to reset the game, but don't fail if this doesn't work
-        try {
-          await resetGame();
-          console.log("Game reset successfully");
-        } catch (error) {
-          console.warn("Could not reset game on server:", error);
-        }
-
-        // Try to get initial suggestions, but use defaults if this fails
-        try {
-          const initialSuggestions = await getSuggestions();
-          if (
-            Array.isArray(initialSuggestions) &&
-            initialSuggestions.length > 0
-          ) {
-            setSuggestions(initialSuggestions);
-            console.log("Received initial suggestions:", initialSuggestions);
-          } else {
-            console.log("Using default suggestions");
-          }
-        } catch (error) {
-          console.warn("Could not get suggestions from server:", error);
-        }
-      } catch (error) {
-        console.error("Error during initialization:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initGame();
+    // Just initialize with default suggestions - don't call backend
+    setSuggestions(DEFAULT_SUGGESTIONS);
 
     // Focus the hidden input on initial render
     if (hiddenInputRef.current) {
@@ -121,7 +84,7 @@ const useWordleGame = () => {
     updateCell(row, col, grid[row][col].letter, newColor);
   };
 
-  // API-connected functions
+  // Submit guess to backend and get suggestions
   const generateSuggestions = async () => {
     try {
       setIsLoading(true);
@@ -140,7 +103,7 @@ const useWordleGame = () => {
         `Submitting guess: word=${word}, colors=${colors}, guessNumber=${currentRow + 1}`,
       );
 
-      // Submit the guess to the server
+      // Submit the guess to the server - the only time we communicate with backend
       const newSuggestions = await submitGuess(word, colors, currentRow + 1);
 
       // Update the UI with the new suggestions
@@ -248,9 +211,10 @@ const useWordleGame = () => {
     try {
       setIsLoading(true);
 
-      // Try to reset on the server
+      // Reset the server state
       try {
         await resetGame();
+        console.log("Game reset successfully on server");
       } catch (error) {
         console.warn("Could not reset game on server:", error);
       }

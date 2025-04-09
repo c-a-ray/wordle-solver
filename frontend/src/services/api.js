@@ -61,64 +61,46 @@ export const resetGame = async () => {
  */
 export const submitGuess = async (word, colors, guessNumber) => {
   try {
+    // Format the request payload according to what the server expects
+    // Note: The server expects "guess-number" with a hyphen
+    const payload = {
+      word: word.toLowerCase(), // Make sure word is lowercase
+      colors: colors, // Array of color strings
+      "guess-number": guessNumber, // With hyphen, not underscore or camelCase
+    };
+
+    console.log("Submitting guess to server:", payload);
+
     const response = await fetch(`/api/guess`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        word,
-        colors,
-        guess_number: guessNumber,
-      }),
+      credentials: "include", // Important: include cookies for session
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(
-        errorData.error || `Server responded with ${response.status}`,
-      );
+      // Try to get the error details from the response
+      let errorMessage;
+      try {
+        const errorData = await response.json();
+        errorMessage =
+          errorData.error || `Server responded with ${response.status}`;
+      } catch (e) {
+        errorMessage = `Server responded with ${response.status}`;
+      }
+
+      console.error("Server error response:", errorMessage);
+      throw new Error(errorMessage);
     }
 
     const result = await response.json();
+    console.log("Server response:", result);
+
     return Array.isArray(result) ? result : DEFAULT_SUGGESTIONS;
   } catch (error) {
     console.error("Error submitting guess:", error);
-    // Return default suggestions on error
-    return DEFAULT_SUGGESTIONS;
-  }
-};
-
-/**
- * Get suggestions based on current game state
- * @returns {Promise<Array>} Array of suggested words
- */
-export const getSuggestions = async () => {
-  try {
-    const response = await fetch(`/api/suggest`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Server responded with ${response.status}`);
-    }
-
-    const result = await response.json();
-
-    // Check if we got a proper array of suggestions or an object with status
-    if (Array.isArray(result)) {
-      return result;
-    } else if (result.status === "No suggestions available") {
-      // Server says no suggestions, return default ones
-      return DEFAULT_SUGGESTIONS;
-    } else {
-      return DEFAULT_SUGGESTIONS;
-    }
-  } catch (error) {
-    console.error("Error getting suggestions:", error);
     // Return default suggestions on error
     return DEFAULT_SUGGESTIONS;
   }
