@@ -1,13 +1,13 @@
 # Wordle Solver
 
-An tool to help solve Wordle puzzles by suggesting optimal word choices based on your previous guesses and feedback.
+A tool to help solve Wordle puzzles by suggesting optimal word choices based on your previous guesses and feedback.
 
 ## Overview
 
 This project is a full-stack application with:
 
-- A **Common Lisp backend** that provides word suggestions based on the current game state
-- A **React frontend** with an interactive Wordle-like UI for entering guesses and receiving suggestions
+- A Common Lisp backend that provides word suggestions based on the current game state
+- A React frontend with an interactive Wordle-like UI for entering guesses and receiving suggestions
 
 ## Prerequisites
 
