@@ -1,0 +1,50 @@
+:root {
+    /* Colors */
+    --color-black: #000000;
+    --color-white: #ffffff;
+
+    /* Background Colors */
+    --bg-main: #000000;
+    --bg-sidebar: #15202b;
+    --bg-sidebar-item: #192734;
+    --bg-sidebar-item-hover: #22303c;
+
+    /* Border Colors */
+    --border-sidebar: #38444d;
+    --border-cell: #2c2c2c;
+    --border-cell-active: #1d9bf0;
+
+    /* Text Colors */
+    --text-main: #ffffff;
+    --text-muted: #9ca3af;
+
+    /* Cell Colors */
+    --cell-empty: #121212;
+    --cell-empty-active: #1d1d1f;
+    --cell-gray: #3a3a3c;
+    --cell-yellow: #b59f3b;
+    --cell-green: #538d4e;
+
+    /* Error Colors */
+    --error-bg: #7f1d1d;
+    --error-border: #b91c1c;
+
+    /* Shadows */
+    --shadow-normal: 0 2px 5px rgba(0, 0, 0, 0.2);
+    --shadow-active: 0 0 12px rgba(29, 155, 240, 0.5);
+
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+
+    /* Dimensions */
+    --sidebar-width: 250px;
+    --cell-size: 3.5rem;
+    --content-max-width: 28rem;
+
+    /* Animation */
+    --transition-normal: all 0.2s;
+}

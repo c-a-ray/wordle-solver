@@ -1,0 +1,26 @@
+@import "./styles/variables.css";
+
+.app-container {
+    min-height: 100vh;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--spacing-md);
+    width: 100%;
+    position: relative;
+}
+
+.app-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+}

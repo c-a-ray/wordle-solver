@@ -1,0 +1,25 @@
+.reset-button {
+    background-color: #1d9bf0;
+    color: white;
+    border: none;
+    border-radius: 24px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 16px;
+}
+
+.reset-button:hover {
+    background-color: #1a8cd8;
+}
+
+.reset-button:active {
+    background-color: #177bbf;
+}
+
+.reset-button:disabled {
+    background-color: #6e6e6e;
+    cursor: not-allowed;
+}
