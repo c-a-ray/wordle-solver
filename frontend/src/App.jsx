@@ -261,7 +261,6 @@ function App() {
 
       <div className="main-content">
         <h1 className="app-title">Wordle Solver</h1>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
         {/* Hidden input for keyboard capture */}
         <input
           ref={hiddenInputRef}
@@ -302,6 +301,7 @@ function App() {
           <p className="instruction-text">
             Press Enter when your word is complete to get suggestions.
           </p>
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
       </div>
     </div>
