@@ -1,15 +1,15 @@
 import React from "react";
-import ErrorMessage from "../ErrorMessage";
+import Message from "../Message";
 import "./Instructions.css";
 
 /**
- * Instructions component for game instructions and error messages
+ * Instructions component for game instructions and messages
  * @param {Object} props - Component props
- * @param {string} props.errorMessage - Error message to display
+ * @param {string} props.message - Message to display
  * @param {boolean} props.isSuccess - Whether the message is a success message
  * @returns {JSX.Element} Rendered instructions component
  */
-const Instructions = ({ errorMessage, isSuccess = false }) => {
+const Instructions = ({ message, isSuccess = false }) => {
   return (
     <div className="instructions-container">
       <p className="instruction-text mb-2">
@@ -21,9 +21,7 @@ const Instructions = ({ errorMessage, isSuccess = false }) => {
       <p className="instruction-text">
         Use Home/End keys to move to the first/last cell in a row.
       </p>
-      {errorMessage && (
-        <ErrorMessage message={errorMessage} isSuccess={isSuccess} />
-      )}
+      {message && <Message message={message} isSuccess={isSuccess} />}
     </div>
   );
 };

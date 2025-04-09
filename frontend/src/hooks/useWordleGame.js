@@ -22,7 +22,7 @@ const useWordleGame = () => {
   const [currentRow, setCurrentRow] = useState(0);
   const [currentCol, setCurrentCol] = useState(0);
   const [suggestions, setSuggestions] = useState(DEFAULT_SUGGESTIONS);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   // Refs
@@ -118,8 +118,8 @@ const useWordleGame = () => {
       return true;
     } catch (error) {
       console.error("Error generating suggestions:", error);
-      setErrorMessage(`Failed to get suggestions: ${error.message}`);
-      setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+      setMessage(`Failed to get suggestions: ${error.message}`);
+      setTimeout(() => setMessage(""), ERROR_TIMEOUT);
       return false;
     } finally {
       setIsLoading(false);
@@ -195,12 +195,12 @@ const useWordleGame = () => {
           });
       } else if (!lettersComplete) {
         // If letters incomplete, show error
-        setErrorMessage("All cells must have letters before proceeding");
-        setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+        setMessage("All cells must have letters before proceeding");
+        setTimeout(() => setMessage(""), ERROR_TIMEOUT);
       } else if (!colorsComplete) {
         // If colors incomplete, show error
-        setErrorMessage("All cells must be colored before proceeding");
-        setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+        setMessage("All cells must be colored before proceeding");
+        setTimeout(() => setMessage(""), ERROR_TIMEOUT);
       }
     }
   };
@@ -239,12 +239,12 @@ const useWordleGame = () => {
       setCurrentCol(0);
       setSuggestions(DEFAULT_SUGGESTIONS);
 
-      setErrorMessage("Game reset successfully");
-      setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+      setMessage("Game reset successfully");
+      setTimeout(() => setMessage(""), ERROR_TIMEOUT);
     } catch (error) {
       console.error("Error resetting game:", error);
-      setErrorMessage(`Failed to reset game: ${error.message}`);
-      setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+      setMessage(`Failed to reset game: ${error.message}`);
+      setTimeout(() => setMessage(""), ERROR_TIMEOUT);
     } finally {
       setIsLoading(false);
     }
@@ -255,7 +255,7 @@ const useWordleGame = () => {
     currentRow,
     currentCol,
     suggestions,
-    errorMessage,
+    message,
     isLoading,
     cellRefs,
     hiddenInputRef,

@@ -18,7 +18,7 @@ function App() {
     currentRow,
     currentCol,
     suggestions,
-    errorMessage,
+    message,
     isLoading,
     cellRefs,
     hiddenInputRef,
@@ -27,7 +27,6 @@ function App() {
     resetGameState,
   } = useWordleGame();
 
-  // Add error boundary to prevent blank screen
   try {
     return (
       <div className="app-container">
@@ -58,10 +57,10 @@ function App() {
             onCellClick={handleCellClick}
           />
 
-          {/* Instructions and Error Messages */}
+          {/* Instructions and Messages */}
           <Instructions
-            errorMessage={errorMessage}
-            isSuccess={errorMessage.includes("success")}
+            message={message}
+            isSuccess={message.includes("success")}
           />
 
           {/* Loading Overlay */}
