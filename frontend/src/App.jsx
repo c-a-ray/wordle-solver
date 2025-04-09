@@ -59,7 +59,10 @@ function App() {
           />
 
           {/* Instructions and Error Messages */}
-          <Instructions errorMessage={errorMessage} />
+          <Instructions
+            errorMessage={errorMessage}
+            isSuccess={errorMessage.includes("success")}
+          />
 
           {/* Loading Overlay */}
           {isLoading && <Loading />}

@@ -96,12 +96,14 @@ export const submitGuess = async (word, colors, guessNumber) => {
     }
 
     const result = await response.json();
-    console.log("Server response:", result);
+
+    if (result == null || (Array.isArray(result) && result.length == 0)) {
+      return null;
+    }
 
     return Array.isArray(result) ? result : DEFAULT_SUGGESTIONS;
   } catch (error) {
     console.error("Error submitting guess:", error);
-    // Return default suggestions on error
     return DEFAULT_SUGGESTIONS;
   }
 };

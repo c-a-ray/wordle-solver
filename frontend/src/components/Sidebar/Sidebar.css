@@ -42,3 +42,22 @@
     background-color: #22303c;
     transform: scale(1.05);
 }
+
+.no-matches {
+    padding: 16px;
+    background-color: #192734;
+    border-radius: 8px;
+    margin: 8px 0;
+    color: #e1e1e1;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.no-matches p {
+    margin: 8px 0;
+}
+
+.no-matches p:first-child {
+    font-weight: bold;
+    color: #ff6b6b;
+}

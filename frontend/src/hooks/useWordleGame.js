@@ -107,14 +107,12 @@ const useWordleGame = () => {
       const newSuggestions = await submitGuess(word, colors, currentRow + 1);
 
       // Update the UI with the new suggestions
-      if (Array.isArray(newSuggestions) && newSuggestions.length > 0) {
-        setSuggestions(newSuggestions);
-        console.log("Received new suggestions:", newSuggestions);
+      setSuggestions(newSuggestions);
+
+      if (newSuggestions === null) {
+        console.log("No words match the pattern");
       } else {
-        setSuggestions(DEFAULT_SUGGESTIONS);
-        console.log(
-          "Using default suggestions (no valid response from server)",
-        );
+        console.log("Received new suggestions:", newSuggestions);
       }
 
       return true;
@@ -164,6 +162,18 @@ const useWordleGame = () => {
     } else if (e.key === "ArrowDown") {
       // Down arrow key pressed
       cycleColorDown(row, col);
+    } else if (e.key === "ArrowLeft") {
+      // Left arrow key pressed
+      moveToPrevCell(row, col);
+    } else if (e.key === "ArrowRight") {
+      // Right arrow key pressed
+      moveToNextCell(row, col);
+    } else if (e.key === "Home") {
+      // Home key pressed - move to first cell in row
+      setCurrentCol(0);
+    } else if (e.key === "End") {
+      // End key pressed - move to last cell in row
+      setCurrentCol(4);
     } else if (e.key === "Enter") {
       // Enter key pressed
       const lettersComplete = grid[row].every((cell) => cell.letter !== "");
