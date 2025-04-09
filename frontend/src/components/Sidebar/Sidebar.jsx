@@ -12,7 +12,7 @@ const Sidebar = ({ suggestions }) => {
     <div className="sidebar">
       <div className="sidebar-header">Suggestions</div>
       <div className="suggestions-container">
-        {suggestions === null ? (
+        {suggestions === null || suggestions.length == 0 ? (
           <div className="no-matches">
             <p>No words match this pattern.</p>
             <p>Are you sure you entered the Wordle feedback correctly?</p>

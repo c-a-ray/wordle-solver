@@ -1,14 +1,9 @@
-/**
- * API Service for communicating with the Common Lisp backend
- */
-
-// Default suggestions to use when the server doesn't have any yet
 export const DEFAULT_SUGGESTIONS = [
-  "WORDS",
-  "WORLD",
-  "WORTH",
-  "WOULD",
-  "WOUND",
+  "ROATE",
+  "SLATE",
+  "CRANE",
+  "TRACE",
+  "ADIEU",
 ];
 
 /**
@@ -47,7 +42,6 @@ export const resetGame = async () => {
 
     return await response.json();
   } catch (error) {
-    console.error("Error resetting game:", error);
     throw error;
   }
 };
@@ -60,50 +54,36 @@ export const resetGame = async () => {
  * @returns {Promise<Array>} Array of suggested words
  */
 export const submitGuess = async (word, colors, guessNumber) => {
-  try {
-    // Format the request payload according to what the server expects
-    // Note: The server expects "guess-number" with a hyphen
-    const payload = {
-      word: word.toLowerCase(), // Make sure word is lowercase
-      colors: colors, // Array of color strings
-      "guess-number": guessNumber, // With hyphen, not underscore or camelCase
-    };
+  const payload = {
+    word: word.toLowerCase(),
+    colors: colors,
+    "guess-number": guessNumber,
+  };
 
-    console.log("Submitting guess to server:", payload);
+  const response = await fetch(`/api/guess`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include", // Include cookies for session
+    body: JSON.stringify(payload),
+  });
 
-    const response = await fetch(`/api/guess`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include", // Important: include cookies for session
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      // Try to get the error details from the response
-      let errorMessage;
-      try {
-        const errorData = await response.json();
-        errorMessage =
-          errorData.error || `Server responded with ${response.status}`;
-      } catch (e) {
-        errorMessage = `Server responded with ${response.status}`;
-      }
-
-      console.error("Server error response:", errorMessage);
-      throw new Error(errorMessage);
+  if (!response.ok) {
+    let errorMessage;
+    try {
+      const errorData = await response.json();
+      errorMessage =
+        errorData.error || `Server responded with ${response.status}`;
+    } catch (e) {
+      errorMessage = `Server responded with ${response.status}`;
     }
-
-    const result = await response.json();
-
-    if (result == null || (Array.isArray(result) && result.length == 0)) {
-      return null;
-    }
-
-    return Array.isArray(result) ? result : DEFAULT_SUGGESTIONS;
-  } catch (error) {
-    console.error("Error submitting guess:", error);
-    return DEFAULT_SUGGESTIONS;
+    throw new Error(errorMessage);
   }
+
+  const result = await response.json();
+  if (result == null || (Array.isArray(result) && result.length == 0)) {
+    return null;
+  }
+  return result;
 };

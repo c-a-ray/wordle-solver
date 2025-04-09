@@ -8,10 +8,6 @@ import useWordleGame from "./hooks/useWordleGame";
 import "./styles/global.css";
 import "./App.css";
 
-/**
- * Main App component for the Wordle Solver application
- * @returns {JSX.Element} The rendered application
- */
 function App() {
   const {
     grid,
@@ -37,7 +33,6 @@ function App() {
 
           <ResetButton onClick={resetGameState} disabled={isLoading} />
 
-          {/* Hidden input for keyboard capture */}
           <input
             ref={hiddenInputRef}
             type="text"
@@ -48,7 +43,6 @@ function App() {
             disabled={isLoading}
           />
 
-          {/* Wordle Grid */}
           <Grid
             grid={grid}
             currentRow={currentRow}
@@ -57,19 +51,16 @@ function App() {
             onCellClick={handleCellClick}
           />
 
-          {/* Instructions and Messages */}
           <Instructions
             message={message}
             isSuccess={message.includes("success")}
           />
 
-          {/* Loading Overlay */}
           {isLoading && <Loading />}
         </div>
       </div>
     );
   } catch (error) {
-    console.error("Error rendering App:", error);
     return (
       <div
         style={{
