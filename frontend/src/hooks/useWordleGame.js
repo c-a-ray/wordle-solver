@@ -1,17 +1,20 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  COLORS,
-  MOCK_SUGGESTIONS,
-  DEFAULT_SUGGESTIONS,
-  ERROR_TIMEOUT,
-} from "../utils/constants";
+import { COLORS, ERROR_TIMEOUT } from "../utils/constants";
 import { getNextColorUp, getNextColorDown } from "../utils/colorUtils";
+import {
+  submitGuess,
+  getSuggestions,
+  resetGame,
+  convertColorsForBackend,
+  DEFAULT_SUGGESTIONS,
+} from "../services/api";
 
 /**
  * Custom hook that handles all Wordle game logic
  * @returns {Object} Game state and handler functions
  */
 const useWordleGame = () => {
+  // Game state
   const [grid, setGrid] = useState(
     Array(6)
       .fill()
@@ -21,7 +24,9 @@ const useWordleGame = () => {
   const [currentCol, setCurrentCol] = useState(0);
   const [suggestions, setSuggestions] = useState(DEFAULT_SUGGESTIONS);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
+  // Refs
   const cellRefs = useRef(
     Array(6)
       .fill()
@@ -36,8 +41,48 @@ const useWordleGame = () => {
     }
   }, [currentRow, currentCol]);
 
-  // Focus the hidden input on initial render
+  // Initialize the game
   useEffect(() => {
+    const initGame = async () => {
+      // Start with a default set of suggestions
+      setSuggestions(DEFAULT_SUGGESTIONS);
+
+      try {
+        setIsLoading(true);
+
+        // Try to reset the game, but don't fail if this doesn't work
+        try {
+          await resetGame();
+          console.log("Game reset successfully");
+        } catch (error) {
+          console.warn("Could not reset game on server:", error);
+        }
+
+        // Try to get initial suggestions, but use defaults if this fails
+        try {
+          const initialSuggestions = await getSuggestions();
+          if (
+            Array.isArray(initialSuggestions) &&
+            initialSuggestions.length > 0
+          ) {
+            setSuggestions(initialSuggestions);
+            console.log("Received initial suggestions:", initialSuggestions);
+          } else {
+            console.log("Using default suggestions");
+          }
+        } catch (error) {
+          console.warn("Could not get suggestions from server:", error);
+        }
+      } catch (error) {
+        console.error("Error during initialization:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initGame();
+
+    // Focus the hidden input on initial render
     if (hiddenInputRef.current) {
       setTimeout(() => {
         hiddenInputRef.current.focus();
@@ -45,6 +90,7 @@ const useWordleGame = () => {
     }
   }, []);
 
+  // Grid manipulation functions
   const updateCell = (row, col, letter, color) => {
     const newGrid = [...grid];
     newGrid[row][col] = { letter, color };
@@ -75,33 +121,68 @@ const useWordleGame = () => {
     updateCell(row, col, grid[row][col].letter, newColor);
   };
 
-  const generateSuggestions = () => {
-    const constraints = grid.slice(0, currentRow + 1).map((row) =>
-      row.map((cell) => ({
-        letter: cell.letter.toLowerCase(),
-        state: cell.color,
-      })),
-    );
+  // API-connected functions
+  const generateSuggestions = async () => {
+    try {
+      setIsLoading(true);
+      const rowData = grid[currentRow];
 
-    // TODO use API
-    const newSuggestions =
-      MOCK_SUGGESTIONS[currentRow - 1] || DEFAULT_SUGGESTIONS;
-    setSuggestions(newSuggestions);
+      // Extract the word from the current row
+      const word = rowData
+        .map((cell) => cell.letter)
+        .join("")
+        .toLowerCase();
+
+      // Convert colors to the format expected by the backend
+      const colors = convertColorsForBackend(grid, currentRow);
+
+      console.log(
+        `Submitting guess: word=${word}, colors=${colors}, guessNumber=${currentRow + 1}`,
+      );
+
+      // Submit the guess to the server
+      const newSuggestions = await submitGuess(word, colors, currentRow + 1);
+
+      // Update the UI with the new suggestions
+      if (Array.isArray(newSuggestions) && newSuggestions.length > 0) {
+        setSuggestions(newSuggestions);
+        console.log("Received new suggestions:", newSuggestions);
+      } else {
+        setSuggestions(DEFAULT_SUGGESTIONS);
+        console.log(
+          "Using default suggestions (no valid response from server)",
+        );
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Error generating suggestions:", error);
+      setErrorMessage(`Failed to get suggestions: ${error.message}`);
+      setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // Handle keyboard input
   const handleKeyDown = (e) => {
     e.preventDefault();
+
+    if (isLoading) return; // Prevent input during API calls
 
     console.log("Key pressed:", e.key);
     const row = currentRow;
     const col = currentCol;
 
     if (/^[a-zA-Z]$/.test(e.key)) {
+      // Letter key pressed
       updateCell(row, col, e.key.toUpperCase(), grid[row][col].color);
       if (col < 4) {
         moveToNextCell(row, col);
       }
     } else if (e.key === "Backspace" || e.key === "Delete") {
+      // Backspace/Delete key pressed
       if (grid[row][col].letter) {
         updateCell(row, col, "", grid[row][col].color);
       } else if (col > 0) {
@@ -109,33 +190,49 @@ const useWordleGame = () => {
         updateCell(row, col - 1, "", grid[row][col - 1].color);
       }
     } else if (e.key === "ArrowLeft") {
+      // Left arrow key pressed
       moveToPrevCell(row, col);
     } else if (e.key === "ArrowRight") {
+      // Right arrow key pressed
       moveToNextCell(row, col);
     } else if (e.key === "ArrowUp") {
+      // Up arrow key pressed
       cycleColorUp(row, col);
     } else if (e.key === "ArrowDown") {
+      // Down arrow key pressed
       cycleColorDown(row, col);
     } else if (e.key === "Enter") {
+      // Enter key pressed
       const lettersComplete = grid[row].every((cell) => cell.letter !== "");
       const colorsComplete = grid[row].every(
         (cell) => cell.color !== COLORS.EMPTY,
       );
 
       if (lettersComplete && colorsComplete && row < 5) {
-        setCurrentRow(row + 1);
-        setCurrentCol(0);
-        generateSuggestions();
+        // If complete, move to next row and generate suggestions
+        generateSuggestions()
+          .then((success) => {
+            if (success) {
+              setCurrentRow(row + 1);
+              setCurrentCol(0);
+            }
+          })
+          .catch((error) => {
+            console.error("Error handling Enter key:", error);
+          });
       } else if (!lettersComplete) {
+        // If letters incomplete, show error
         setErrorMessage("All cells must have letters before proceeding");
         setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
       } else if (!colorsComplete) {
+        // If colors incomplete, show error
         setErrorMessage("All cells must be colored before proceeding");
         setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
       }
     }
   };
 
+  // Handle clicking on a cell
   const handleCellClick = (row, col) => {
     if (row <= currentRow) {
       setCurrentRow(row);
@@ -146,16 +243,51 @@ const useWordleGame = () => {
     }
   };
 
+  // Expose a reset function
+  const resetGameState = async () => {
+    try {
+      setIsLoading(true);
+
+      // Try to reset on the server
+      try {
+        await resetGame();
+      } catch (error) {
+        console.warn("Could not reset game on server:", error);
+      }
+
+      // Reset the local state
+      setGrid(
+        Array(6)
+          .fill()
+          .map(() => Array(5).fill({ letter: "", color: COLORS.EMPTY })),
+      );
+      setCurrentRow(0);
+      setCurrentCol(0);
+      setSuggestions(DEFAULT_SUGGESTIONS);
+
+      setErrorMessage("Game reset successfully");
+      setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+    } catch (error) {
+      console.error("Error resetting game:", error);
+      setErrorMessage(`Failed to reset game: ${error.message}`);
+      setTimeout(() => setErrorMessage(""), ERROR_TIMEOUT);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     grid,
     currentRow,
     currentCol,
     suggestions,
     errorMessage,
+    isLoading,
     cellRefs,
     hiddenInputRef,
     handleKeyDown,
     handleCellClick,
+    resetGameState,
   };
 };
 
