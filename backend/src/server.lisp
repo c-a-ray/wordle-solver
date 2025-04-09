@@ -16,6 +16,7 @@
                 #:determine-suggestions)
   (:import-from :solver-utils
                 #:read-file-lines
+                #:load-word-frequencies
                 #:alist-to-plist
                 #:json-error)
   (:import-from :wordle-guess
@@ -33,9 +34,16 @@
 (defparameter *words-source* "data/words.txt"
   "Relative path to file containing valid Wordle word list.")
 
+(defparameter *word-frequencies* nil
+  "Hash table with Norvig word frequencies.")
+
+(defparameter *word-frequency-source* "data/words-with-frequencies.csv"
+  "Relative path to file containing a subset of *WORDS-SOURCE* words with frequencies.")
+
 (defun start-server (&optional (port 8080))
   "Start the server on PORT (defaults to 8080)."
   (setf *word-list* (read-file-lines *words-source*))
+  (setf *word-frequencies* (load-word-frequencies *word-frequency-source*))
   (setf *server* (make-instance 'easy-acceptor :port port))
   (start *server*)
   (format t "Server started on port ~D.~%" port))
@@ -107,7 +115,8 @@
                  (let* ((guess-number (getf plist :guess-number))
                         (guess (make-wordle-guess word colors))
                         (suggestions (determine-suggestions *word-list*
-                                                            (update-guess-history guess guess-number))))
+                                                            (update-guess-history guess guess-number)
+                                                            *word-frequencies*)))
                    (encode-json-to-string suggestions))
                (error (err)
                  (json-error 400 (format nil "~A" err)))))

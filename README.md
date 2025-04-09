@@ -14,7 +14,7 @@ This project is a full-stack application with:
 - [Steel Bank Common Lisp (SBCL)](http://www.sbcl.org/)
 - [Quicklisp](https://www.quicklisp.org/beta/)
 - [Node.js](https://nodejs.org/)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [npm](https://www.npmjs.com/)
 
 ## Getting Started
 
@@ -64,9 +64,10 @@ This project is a full-stack application with:
 6. Click on a suggestion to fill the current row with that word
 7. Use the Reset button to start a new game
 
-## Word List Source
+## Data Sources
 
-This project uses a word list taken from [tabatkins/wordle-list](https://github.com/tabatkins/wordle-list).
+- The full word list was taken from [tabatkins/wordle-list](https://github.com/tabatkins/wordle-list), which is licensed under an [MIT License](https://github.com/tabatkins/wordle-list/blob/main/LICENSE).
+- Word frequency data is derived from [Peter Norvig's compilation](https://norvig.com/google-books-common-words.txt), based on the [Google Books Ngram data](https://books.google.com/ngrams/info), which is licensed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
 
 ## License
 

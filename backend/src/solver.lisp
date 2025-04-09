@@ -7,8 +7,23 @@
 
 (in-package :solver-core)
 
-(defun determine-suggestions (words guess-history)
-  "Return a list of suggested guesses by filtering WORDS based on GUESS-HISTORY."
+(defun determine-suggestions (words guess-history freq-table)
+  "Return candidate words sorted by frequency (descending) if known, then others."
+  (let ((candidates (get-candidates words guess-history)))
+    (multiple-value-bind (freq-known freq-unknown)
+        (loop for w in candidates
+              if (gethash w freq-table)
+                collect w into freq-known
+              else
+                collect w into freq-unknown
+              finally (return (values freq-known freq-unknown)))
+      (setf freq-known (sort freq-known #'>
+                             :key (lambda (w)
+                                    (gethash w freq-table))))
+      (append freq-known freq-unknown))))
+
+(defun get-candidates (words guess-history)
+  "Return a list of candidates by filtering WORDS based on GUESS-HISTORY."
   (loop for word in words
         when (every (lambda (guess)
                       (possible-solution word guess))
