@@ -114,8 +114,3 @@
            (json-error 400 "Missing request body"))))
     (t
      (json-error 405 "Method not allowed"))))
-
-(define-easy-handler (suggest :uri "/suggest") ()
-  "Return possible suggestions based on the current state."
-  (let ((suggestions (determine-suggestions *word-list* (get-guess-history))))
-    (encode-json-to-string (or suggestions '(:status "No suggestions available")))))
