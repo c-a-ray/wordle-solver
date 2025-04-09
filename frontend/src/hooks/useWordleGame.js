@@ -38,8 +38,20 @@ const useWordleGame = () => {
     }
   }, [currentRow, currentCol]);
 
+  // Initialize the game
   useEffect(() => {
-    setSuggestions(DEFAULT_SUGGESTIONS);
+    const initGame = async () => {
+      setSuggestions(DEFAULT_SUGGESTIONS);
+
+      try {
+        setIsLoading(true);
+        await resetGame();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initGame();
 
     // Focus the hidden input on initial render
     if (hiddenInputRef.current) {
