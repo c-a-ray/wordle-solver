@@ -5,9 +5,10 @@ import "./Sidebar.css";
  * Sidebar component that displays word suggestions
  * @param {Object} props - Component props
  * @param {Array<string>|null} props.suggestions - Array of word suggestions or null if no matches
+ * @param {Function} props.onSuggestionClick - Callback function when a suggestion is clicked
  * @returns {JSX.Element} Rendered sidebar component
  */
-const Sidebar = ({ suggestions }) => {
+const Sidebar = ({ suggestions, onSuggestionClick }) => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">Suggestions</div>
@@ -19,7 +20,11 @@ const Sidebar = ({ suggestions }) => {
           </div>
         ) : (
           suggestions.map((word, index) => (
-            <div key={index} className="suggestion-item">
+            <div 
+              key={index} 
+              className="suggestion-item"
+              onClick={() => onSuggestionClick(word)}
+            >
               {word}
             </div>
           ))

@@ -204,6 +204,24 @@ const useWordleGame = () => {
     }
   };
 
+  const handleSuggestionClick = (word) => {
+    if (isLoading || currentRow >= 6) return;
+
+    const newGrid = [...grid];
+    const upperCaseWord = word.toUpperCase();
+
+    // Fill the current row with the selected word
+    for (let i = 0; i < 5; i++) {
+      newGrid[currentRow][i] = {
+        letter: upperCaseWord[i] || "",
+        color: newGrid[currentRow][i].color,
+      };
+    }
+
+    setGrid(newGrid);
+    setCurrentCol(4);
+  };
+
   return {
     grid,
     currentRow,
@@ -216,6 +234,7 @@ const useWordleGame = () => {
     handleKeyDown,
     handleCellClick,
     resetGameState,
+    handleSuggestionClick,
   };
 };
 

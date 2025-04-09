@@ -21,12 +21,16 @@ function App() {
     handleKeyDown,
     handleCellClick,
     resetGameState,
+    handleSuggestionClick,
   } = useWordleGame();
 
   try {
     return (
       <div className="app-container">
-        <Sidebar suggestions={suggestions || []} />
+        <Sidebar 
+          suggestions={suggestions || []}
+          onSuggestionClick={handleSuggestionClick}
+        />
 
         <div className="main-content">
           <h1 className="app-title">Wordle Solver</h1>
